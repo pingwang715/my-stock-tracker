@@ -20,23 +20,23 @@ export default function Header() {
               </a>
             </li>
             <li>
-              <a href="/about" className={navLinkClass}>
-                About
+              <a href="/favorites" className={navLinkClass}>
+                Favorites
               </a>
             </li>
             <li>
-              <a href="/histroy" className={navLinkClass}>
-                History
-              </a>
-            </li>
-            <li>
-              <a href="/company" className={navLinkClass}>
-                Company
+              <a href="/portfolio" className={navLinkClass}>
+                Portfolio
               </a>
             </li>
             <li>
               <a href="/news" className={navLinkClass}>
                 News
+              </a>
+            </li>
+            <li>
+              <a href="/login" className={navLinkClass}>
+                Login
               </a>
             </li>
           </ul>
