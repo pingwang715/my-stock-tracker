@@ -2,13 +2,16 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-primary: "Unna";
   --color-primary: #0B2D72;
   --color-dark: #082052;
-  --color-light: #6d9dfc;
-  --color-lighter: #83a6eb;
-
+  --color-light: #96BAFD;
+  --color-lighter: #E4ECFB;
+  --color-normalbg: #f3f4f6;
+  --color-darkbg: #1e2939;
 }
 
 @keyframes ticker {

@@ -3,7 +3,7 @@ import stockMarketImage from "../assets/images/StockMarket.png";
 
 export default function Banner() {
   return (
-    <div>
+    <div className="w-full">
       <img src={stockMarketImage} alt="Stock market image" className="min-w-full max-h-[552px]" />
     </div>
   )

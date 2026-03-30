@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -25,19 +26,8 @@ public class StockDailyPrice {
     private Stock stock;
 
     @Column(name = "PRICE_DATE", nullable = false, updatable = false)
-    @CreatedDate
-    @CreationTimestamp
-    private Instant priceDate;
+    private LocalDate priceDate;
 
-    @Column(name = "open_price", precision = 12, scale = 4)
-    private BigDecimal openPrice;
-
-    @Column(name = "high_price", precision = 12, scale = 4)
-    private BigDecimal highPrice;
-
-    @Column(name = "low_price", precision = 12, scale = 4)
-    private BigDecimal lowPrice;
-
-    @Column(name = "volume")
-    private Long volume;
+    @Column(name = "close_price", nullable = false, precision = 12, scale = 4)
+    private BigDecimal closePrice;
 }

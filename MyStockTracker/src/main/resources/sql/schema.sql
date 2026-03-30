@@ -22,14 +22,10 @@ CREATE TABLE IF NOT EXISTS stock_daily_prices (
     stock_id    BIGINT NOT NULL,
     price_date  DATE   NOT NULL,
 
-    open_price  DECIMAL(12, 4),
-    high_price  DECIMAL(12, 4),
-    low_price   DECIMAL(12, 4),
     close_price DECIMAL(12, 4),
-    volume      BIGINT,
 
     FOREIGN KEY (stock_id) REFERENCES stocks (stock_id) ON DELETE CASCADE,
-    UNIQUE KEY (stock_id, price_date)vo
+    UNIQUE KEY (stock_id, price_date)
     );
 CREATE INDEX idx_sdp_price_date ON stock_daily_prices (price_date);
 

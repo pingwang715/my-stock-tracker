@@ -24,13 +24,13 @@ public class Stock {
     @Column(name = "SYMBOL", nullable = false, length = 20, unique = true)
     private String symbol;
 
-    @Column(name = "COMPANY_NAME", nullable = false, length = 255)
+    @Column(name = "COMPANY_NAME",  length = 255)
     private String company_name;
 
-    @Column(name = "EXCHANGE", nullable = false, length = 50)
+    @Column(name = "EXCHANGE", length = 50)
     private String exchange;
 
-    @Column(name = "SECTOR",  nullable = false, length = 100)
+    @Column(name = "SECTOR", length = 100)
     private String sector;
 
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
