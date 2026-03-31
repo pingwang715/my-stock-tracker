@@ -1,9 +1,11 @@
 import React, {useState, useMemo} from "react";
 import StockCard from "./StockCard";
 import SearchBox from "./SearchBox";
+import { useLoaderData } from "react-router-dom";
 
-export default function StockListings({ stocks }) {
+export default function StockListings() {
   const [searchText, setSearchText] = useState("");
+  const stocks = useLoaderData();
 
   const finalFilteredStocks = useMemo(() => {
     if (!Array.isArray(stocks)) {
@@ -14,6 +16,8 @@ export default function StockListings({ stocks }) {
       (stock) =>
         stock.symbol.toLowerCase().includes(searchText.toLowerCase())
     );
+
+    return filteredStocks;
   }, [stocks, searchText])
 
   function handleSearchChange(inputSearch) {

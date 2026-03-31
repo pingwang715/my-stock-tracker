@@ -74,8 +74,8 @@ export default function StockBoard() {
           </div>
         </form>
 
-        <div className="p-5 m-5 flex justify-between items-center bg-gray-200 dark:bg-gray-700 rounded-md gap-5">
-          <div className="font-primary text-lg">
+        <div className="p-5 m-5 flex justify-between items-center bg-gray-200 dark:bg-darkbg rounded-md gap-5">
+          <div className="font-primary text-lg text-primary dark:text-light">
             {displaySymbol ? displaySymbol : "Stock"}
           </div>
           <span className={`font-semibold ${isNaN(performance) ? "text-black" : performance > 0 ? "text-emerald-500" : "text-rose-500"}`}>{performance == null ? "" :  `${performance > 0 ? "▲" : "▼"} ${performance}%`}</span>

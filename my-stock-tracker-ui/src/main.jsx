@@ -11,7 +11,8 @@ import Portfolio from './components/Portfolio.jsx';
 import News from './components/News.jsx';
 import Login from './components/Login.jsx';
 import ErrorPage from './components/ErrorPage.jsx';
-import { stocksLoader } from './loaders/stocksLoader.js';
+import { stocksLoader } from './service/stocksLoader.js';
+import StockDetail from './components/StockDetail.jsx';
 
 const routeDefinitions = createRoutesFromElements(
   <Route path="/" element={<App />} errorElement={<ErrorPage />}>
@@ -21,6 +22,7 @@ const routeDefinitions = createRoutesFromElements(
     <Route path="/portfolio" element={<Portfolio />} />
     <Route path="/news" element={<News />} />
     <Route path="/login" element={<Login />} />
+    <Route path="/stocks/:stockId" element={<StockDetail />} />
   </Route>
 );
 
