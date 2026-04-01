@@ -69,7 +69,7 @@ export default function Header() {
             </li>
             <li>
               <NavLink
-                to="/portfolio"
+                to="/portfolios"
                 className={({ isActive }) =>
                   isActive ? `underline ${navLinkClass}` : navLinkClass
                 }

@@ -8,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -35,7 +37,7 @@ public class Portfolio {
     private BigDecimal purchasePrice;
 
     @Column(name = "purchase_date", nullable = false)
-    private Instant purchaseDate;
+    private LocalDate purchaseDate;
 
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
     @CreatedDate

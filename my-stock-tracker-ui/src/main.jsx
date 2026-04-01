@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
 import Home from './components/Home.jsx';
 import StockListings from './components/StockListings.jsx';
-import Portfolio from './components/Portfolio.jsx';
+import Portfolio, { portfoliosLoader } from './components/Portfolio.jsx';
 import News from './components/News.jsx';
 import Login from './components/Login.jsx';
 import ErrorPage from './components/ErrorPage.jsx';
@@ -19,7 +19,7 @@ const routeDefinitions = createRoutesFromElements(
     <Route index element={<Home />} />
     <Route path="/home" element={<Home />} />
     <Route path="/stocks" element={<StockListings />} loader={stocksLoader} />
-    <Route path="/portfolio" element={<Portfolio />} />
+    <Route path="/portfolios" element={<Portfolio />} loader={portfoliosLoader}/>
     <Route path="/news" element={<News />} />
     <Route path="/login" element={<Login />} />
     <Route path="/stocks/:stockId" element={<StockDetail />} />

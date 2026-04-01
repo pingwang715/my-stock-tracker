@@ -1,6 +1,8 @@
 import React from "react";
 import StockChart from "./StockChart";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function StockDetail() {
 
@@ -8,8 +10,13 @@ export default function StockDetail() {
   const stock = location.state?.stock;
 
   return (
-    <div className="min-h-[852px] flex items-center justify-center font-primary bg-normalbg dark:bg-darkbg">
-      <StockChart symbol={stock.symbol}/>
+    <div className="min-h-[852px] flex justify-center font-primary bg-normalbg dark:bg-darkbg">
+      <div className="flex flex-row items-center gap-4">
+        <Link to="/home" className="text-xm text-primary hover:text-light dark:text-light dark:hover:text-lighter">
+          <FontAwesomeIcon icon={faArrowLeft} /> Back to Home
+        </Link>
+        <StockChart symbol={stock.symbol}/>
+      </div>
     </div>
   )
 }

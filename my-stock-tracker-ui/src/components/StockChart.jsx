@@ -219,7 +219,7 @@ export default function StockChart({ symbol }) {
       </div>
 
       {/* Metric cards */}
-      <div className="grid grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-4 gap-6 mb-6">
         <MetricCard label="latest close" value={metrics?.price ?? "—"} />
         <MetricCard
           label="100-day change"
@@ -238,9 +238,7 @@ export default function StockChart({ symbol }) {
       </div>
 
       <p className="text-xs text-[#888780 m-3]">{footer}</p>
-      <Link to="/home" className="mt-3 text-xm hover:text-lighter">
-        <FontAwesomeIcon icon={faArrowLeft} /> Back to Home
-      </Link>
+
     </div>
 
   );
