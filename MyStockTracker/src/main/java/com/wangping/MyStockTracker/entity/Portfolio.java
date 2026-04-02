@@ -23,15 +23,11 @@ public class Portfolio {
     private Long portfolioId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 
-    @Column(name = "shares", nullable = false, precision = 12, scale = 4)
-    private BigDecimal shares;
+    @Column(name = "shares", nullable = false)
+    private Integer shares;
 
     @Column(name = "purchase_price", nullable = false, precision = 12, scale = 4)
     private BigDecimal purchasePrice;

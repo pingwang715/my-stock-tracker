@@ -3,7 +3,9 @@ package com.wangping.MyStockTracker.controller;
 import com.wangping.MyStockTracker.dto.PortfolioRequestDto;
 import com.wangping.MyStockTracker.dto.PortfolioResponseDto;
 import com.wangping.MyStockTracker.service.IPortfolioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +18,15 @@ public class PortfolioController {
     private final IPortfolioService iPortfolioService;
 
     @GetMapping
-    public List<PortfolioResponseDto> getPortfolios() throws InterruptedException {
+    public ResponseEntity<List<PortfolioResponseDto>> getPortfolios() {
         List<PortfolioResponseDto> portfolioList = iPortfolioService.getPortfolios();
-        return portfolioList;
+        return ResponseEntity.ok().body(portfolioList);
     }
 
     @PostMapping
-    public ResponseEntity<?> addPortfolio(@RequestBody PortfolioRequestDto portfolioRequestDto) {
+    public ResponseEntity<String> addPortfolio(@Valid @RequestBody PortfolioRequestDto portfolioRequestDto) {
         iPortfolioService.savePortfolio(portfolioRequestDto);
-        return ResponseEntity.ok("Saved portfolio successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Saved portfolio successfully");
     }
 
     @DeleteMapping("/{id}")

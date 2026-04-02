@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Chart from "chart.js/auto";
 import { get100DaysPrices } from "../service/alphaVantage100Service";
-import { Link }from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import PageTitle from "./PageTitle";
 
 // helpers
 async function generateData(symbol) {
@@ -52,23 +50,6 @@ function MetricCard({ label, value, valueColor}) {
         {value}
       </p>
     </div>
-  );
-}
-
-const BADGE = {
-  demo: { bg: "#f1efe8", color: "#5F5E5A", text: "demo data" },
-  fetching: { bg: "#E6F1FB", color: "#185FA5", text: "fetching…" },
-  live: { bg: "#EAF3DE", color: "#3B6D11", text: "live data" },
-  error: { bg: "#FCEBEB", color: "#A32D2D", text: "error" },
-};
-
-function Badge({ status }) {
-  const s = BADGE[status] ?? BADGE.demo;
-
-  return (
-    <span className="text-xs px-10 py-3 rounded-lg font-medium">
-      {s.text}
-    </span>
   );
 }
 
@@ -171,52 +152,12 @@ export default function StockChart({ symbol }) {
     return () => chartRef.current?.destroy;
   }, [renderChart, symbol]);
 
-  const loadData = async () => {
-    const sym = symbol.trim().toUpperCase();
 
-    setLoading(true);
-    setStatus("fetching");
-
-    try {
-      const result = await get100DaysPrices(symbol.toUpperCase());
-      if (!result) {
-        throw new Response(
-          "Failed to fetch prices from Alpha Vantage. Please try again.",
-          { status: 500 },
-        );
-      }
-      const { symbol: sym, prices, labels, date } = result;
-
-      setStatus("live");
-      setFooter(
-        `Showing last ${prices.length} trading days for ${sym} from Alpha Vantage. Last refreshed: ${date}`,
-      );
-      renderChart(labels, prices);
-    } catch (error) {
-      setStatus("error");
-      setFooter("Error: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="font-sans text-primary dark:text-light p-6 max-w-[900px] mx-auto">
-      {/* Controls */}
-      <div className="flex items-center gap-10 flex-wrap mb-6">
-        <input
-          className="h-9 p-3 border border-gray-300 rounded-lg text-sm outline-none focus:ring"
-          placeholder={symbol}
-        />
-        <button
-          className="h-9 px-4 border border-gray-300 rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-500 text-sm whitespace-nowrap"
-          onClick={loadData}
-          disabled={loading}
-        >
-          {loading ? "Loading…" : "Fetch data →"}
-        </button>
-        <Badge status={status} />
-      </div>
+
+      <PageTitle title={symbol} />
 
       {/* Metric cards */}
       <div className="grid grid-cols-4 gap-6 mb-6">

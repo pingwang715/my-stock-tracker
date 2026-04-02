@@ -12,8 +12,8 @@ export default function StockDetail() {
   return (
     <div className="min-h-[852px] flex justify-center font-primary bg-normalbg dark:bg-darkbg">
       <div className="flex flex-row items-center gap-4">
-        <Link to="/home" className="text-xm text-primary hover:text-light dark:text-light dark:hover:text-lighter">
-          <FontAwesomeIcon icon={faArrowLeft} /> Back to Home
+        <Link to="/stocks" className="text-xm text-primary hover:text-light dark:text-light dark:hover:text-lighter">
+          <FontAwesomeIcon icon={faArrowLeft} /> Back to Stocks
         </Link>
         <StockChart symbol={stock.symbol}/>
       </div>

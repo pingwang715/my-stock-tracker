@@ -29,6 +29,4 @@ public class User {
     @CreationTimestamp
     private Instant createdAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Portfolio> portfolios = new ArrayList<>();
 }

@@ -1,39 +1,40 @@
-import React, {useState, useRef, useEffect} from "react";
-import { Dialog, DialogPanel, DialogTitle, useClose } from "@headlessui/react";
+import React, { useState, useRef } from "react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import apiClient from "../service/apiClient";
 import { Form } from "react-router-dom";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
+import "react-calendar/dist/Calendar.css";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { portfolioSchema } from "../schema/portfolioSchema";
 
 export default function PortfolioForm({ isOpen, onClose }) {
-
-  const formRef = useRef(null);
-  const isSubmitting = navigation.state === "submitting";
-  let close = useClose();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(portfolioSchema),
+    defaultValues: {
+      purchaseDate: new Date().toISOString().split("T")[0],
+    },
+  });
 
   const [date, setDate] = useState(new Date());
 
-  function onChange (date) {
-    setDate(date);
+  function onCalendarChange(selectedDate) {
+    setDate(selectedDate);
+    setValue("purchaseDate", selectedDate.toISOString().split("T")[0], {
+      shouldValidate: true,
+    });
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const data = new FormData(formRef.current);
-
-    const portfolioData = {
-      userId: data.get("userId"),
-      symbol: data.get("symbol"),
-      shares: data.get("shares"),
-      purchasePrice: data.get("purchasePrice"),
-      purchaseDate: date.toISOString(),
-    };
-
+  const onSubmit = async (data) => {
     try {
-      apiClient.post("/portfolios", portfolioData);
-      toast.success("Submitted portfolio successfully!")
+      apiClient.post("/portfolios", data);
+      toast.success("Submitted portfolio successfully!");
       onClose();
       return { success: true };
     } catch (error) {
@@ -42,11 +43,14 @@ export default function PortfolioForm({ isOpen, onClose }) {
       const message =
         typeof data === "string"
           ? data
-          : data?.errorMessage || data?.message || error.message || "Failed to submit your portfolio. Please try again.";
+          : data?.errorMessage ||
+            data?.message ||
+            error.message ||
+            "Failed to submit your portfolio. Please try again.";
 
       toast.error(message);
     }
-  }
+  };
 
   const labelStyle =
     "block text-lg font-semibold text-primary dark:text-light mb-2";
@@ -54,6 +58,7 @@ export default function PortfolioForm({ isOpen, onClose }) {
     "w-full px-4 py-2 text-base border rounded-md transition border-primary dark:border-light focus:ring focus:ring-dark dark:focus:ring-lighter focus:outline-none text-gray-800 dark:text-lighter bg-white dark:bg-gray-600 placeholder-gray-400 dark:placeholder-gray-300";
   const buttonStyle =
     "font-primary bg-primary hover:bg-dark text-white flex items-center py-3 px-5 rounded-md";
+  const errorStyle = "text-red-500 text-sm mt-1";
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -61,44 +66,81 @@ export default function PortfolioForm({ isOpen, onClose }) {
       <DialogPanel>
         <DialogTitle>Add Your Portfolio</DialogTitle>
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Form method="POST" ref={formRef} onSubmit={handleSubmit} className="bg-white dark:bg-darkbg px-8 py-10 shadow-md rounded-md">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="bg-white dark:bg-darkbg px-8 py-10 shadow-md rounded-md"
+          >
             <div>
-              <label htmlFor="userId" className={labelStyle}>User Id</label>
-              <input className={textFieldStyle} type="number" id="userId" name="userId" placeholder="1" required minLength={1} maxLength={10} />
+              <label htmlFor="symbol" className={labelStyle}>
+                Stock ticker
+              </label>
+              <input
+                className={textFieldStyle}
+                type="text"
+                id="symbol"
+                placeholder="AAPL"
+                {...register("symbol")}
+              />
+              {errors.symbol && <p className={errorStyle}>{errors.symbol.message}</p>}
             </div>
 
             <div>
-              <label htmlFor="symbol" className={labelStyle}>Stock ticker</label>
-              <input className={textFieldStyle} type="text" id="symbol" name="symbol" placeholder="AAPL" required minLength={3} maxLength={20} />
+              <label htmlFor="shares" className={labelStyle}>
+                Shares
+              </label>
+              <input
+                className={textFieldStyle}
+                type="number"
+                id="shares"
+                placeholder="100"
+                {...register("shares", {valueAsNumber: true})}
+              />
+              {errors.shares && <p className={errorStyle}>{errors.shares.message}</p>}
             </div>
 
             <div>
-              <label htmlFor="shares" className={labelStyle}>Shares</label>
-              <input className={textFieldStyle} type="number" id="shares" name="shares" placeholder="100" required min={1} max={1000} />
-            </div>
-
-            <div>
-              <label htmlFor="purchasePice" className={labelStyle}>Purchase price per share</label>
-              <input className={textFieldStyle} type="number" id="purchasePrice" name="purchasePrice" placeholder="200.0000" required min={1} maxLength={1000}/>
+              <label htmlFor="purchasePice" className={labelStyle}>
+                Purchase price per share
+              </label>
+              <input
+                className={textFieldStyle}
+                type="number"
+                id="purchasePrice"
+                placeholder="200.0000"
+                step=".0001"
+                {...register("purchasePrice", { valueAsNumber: true})}
+              />
+              {errors.purchasePrice && <p className={errorStyle}>{errors.purchasePrice.message}</p>}
             </div>
 
             <div className="calendar">
-              <label className={labelStyle} htmlFor="purchaseDate">Purchase date</label>
-              <Calendar onChange={onChange} value={date} className="border border-gray-300 p-3"/>
+              <label className={labelStyle} htmlFor="purchaseDate">
+                Purchase date
+              </label>
+              <Calendar
+                onChange={onCalendarChange}
+                value={date}
+                maxDate={new Date()}
+                className="border border-gray-300 p-3"
+              />
+              {errors.purchaseDate && <p className={errorStyle}>{errors.purchaseDate.message}</p>}
             </div>
 
             <div className="flex items-center justify-center gap-3 mt-4">
               <button type="button" onClick={onClose} className={buttonStyle}>
                 Cancel
               </button>
-              <button type="submit" disabled={isSubmitting} className={buttonStyle}>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={buttonStyle}
+              >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </button>
             </div>
-          </Form>
+          </form>
         </div>
-
       </DialogPanel>
     </Dialog>
-  )
+  );
 }

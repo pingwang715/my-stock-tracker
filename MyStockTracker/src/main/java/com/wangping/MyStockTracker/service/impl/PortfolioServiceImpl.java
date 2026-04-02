@@ -42,8 +42,6 @@ public class PortfolioServiceImpl implements IPortfolioService {
 
     @Override
     public void savePortfolio(PortfolioRequestDto portfolioRequestDto) {
-        User user = userRepository.findById(portfolioRequestDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not Found"));
 
         Stock stock = stockRepository.findBySymbol(portfolioRequestDto.getSymbol())
                 .orElseGet(() -> {
@@ -53,7 +51,6 @@ public class PortfolioServiceImpl implements IPortfolioService {
                 });
 
         Portfolio portfolio = new Portfolio();
-        portfolio.setUser(user);
         portfolio.setStock(stock);
         portfolio.setShares(portfolioRequestDto.getShares());
         portfolio.setPurchasePrice(portfolioRequestDto.getPurchasePrice());
