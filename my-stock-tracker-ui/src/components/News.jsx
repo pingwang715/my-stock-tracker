@@ -21,7 +21,9 @@ export default function News() {
     fetchNews();
   }, [symbols]);
 
-  if (!feeds) return <div>Loading...</div>
+  if (!feeds) return <div className="bg-normalbg dark:bg-darkbg min-h-[852px]">
+      <h2 className="text-primary dark:text-light font-primary">Loading...</h2>
+    </div>
 
   return (
     <div className="bg-normalbg dark:bg-darkbg">

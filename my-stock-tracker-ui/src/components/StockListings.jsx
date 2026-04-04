@@ -26,7 +26,7 @@ export default function StockListings() {
 
   return (
     <div className="bg-normalbg dark:bg-darkbg">
-      <div className="max-w-[1152px] mx-auto">
+      <div className="max-w-[1152px] min-h-[852px] mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-12">
           <SearchBox
             label="Search"

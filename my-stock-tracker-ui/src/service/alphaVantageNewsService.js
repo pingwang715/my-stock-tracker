@@ -19,7 +19,7 @@ async function fetchJSON(queryParams, symbols) {
 
   const responses = await Promise.all(urls.map(url => fetch(url)));
   const data = await Promise.all(responses.map(res => {
-    if (!res.ok) throw new Error(`Failed to fecth: ${res.url} (${res.status})`);
+    if (!res.ok) throw new Error(`Failed to fetch: ${res.url} (${res.status})`);
     return res.json();
   }));
 
@@ -35,22 +35,18 @@ export async function getNews(symbols) {
   );
 
   const feeds = json.flatMap(item => item["feed"] || [])
+  console.log(feeds);
   const neutralFeeds = feeds.filter(feed => feed["overall_sentiment_label"] === "Neutral");
-  if (!neutralFeeds) return null;
-  const titles = neutralFeeds.map((feed) => feed.title);
-  const newsUrls = neutralFeeds.map((feed) => feed.url);
-  const summaries = neutralFeeds.map((feed) => feed.summary);
-  const bannerImages = neutralFeeds.map((feed) => feed.banner_image);
-  const sources = neutralFeeds.map((feed) => feed.source);
+  console.log(neutralFeeds);
+  if (!neutralFeeds.length) return null;
 
-  return {
-
-    titles : titles,
-    urls: newsUrls,
-    summaries: summaries,
-    images: bannerImages,
-    sources: sources,
-  }
+  return neutralFeeds.map(feed => ({
+    title: feed.title,
+    url:feed.url,
+    summary: feed.summary,
+    image: feed.banner_image,
+    source: feed.source,
+  }));
 }
 
 // getNews(["IBM"]).then(data => console.log(data)).catch(console.error);
