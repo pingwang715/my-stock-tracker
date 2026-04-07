@@ -33,7 +33,7 @@ export default function News() {
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-y-8 gap-x-6 py-12">
           {feeds?.length > 0 ? (
             feeds.map((feed) => (
-              <NewsCard feed={feed} />
+              <NewsCard id={feed.id} feed={feed} />
             ))
           ) : (
             <p className="text-center font-primary font-bold text-lg text-primary dark:text-light">

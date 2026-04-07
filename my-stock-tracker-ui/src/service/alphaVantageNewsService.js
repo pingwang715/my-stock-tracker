@@ -41,6 +41,7 @@ export async function getNews(symbols) {
   if (!neutralFeeds.length) return null;
 
   return neutralFeeds.map(feed => ({
+    id: neutralFeeds.indexOf(feed),
     title: feed.title,
     url:feed.url,
     summary: feed.summary,

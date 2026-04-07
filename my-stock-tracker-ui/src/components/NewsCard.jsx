@@ -7,7 +7,7 @@ export default function NewsCard({ feed }) {
       <div className="relative h-160 p-4 flex flex-col font-primary">
         <img src={feed.image} alt={feed.title} className="w-full h-40 border-b border-gray-300 dark:border-gray-600"/>
         <h2 className="text-xl font-semibold text-primary dark:text-light mb-2">
-            {feed.title}
+           `${feed.id} + 1` {feed.title}
         </h2>
 
         <p className="text-base text-gray-600 dark:text-lighter mb-2">
