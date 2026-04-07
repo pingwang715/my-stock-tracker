@@ -14,6 +14,7 @@ import ErrorPage from './components/ErrorPage.jsx';
 import { stocksLoader } from './service/stocksLoader.js';
 import StockDetail from './components/StockDetail.jsx';
 import Register from './components/Register.jsx';
+import { StockProvider } from './store/stock-context.jsx';
 
 const routeDefinitions = createRoutesFromElements(
   <Route path="/" id="root" element={<App />} loader={portfoliosLoader} errorElement={<ErrorPage />}>
@@ -32,7 +33,9 @@ const appRouter = createBrowserRouter(routeDefinitions);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={appRouter} />
+    <StockProvider>
+      <RouterProvider router={appRouter} />
+    </StockProvider>
     <ToastContainer
       position="bottom-right"
       autoClose={3000}

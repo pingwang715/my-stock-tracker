@@ -2,6 +2,8 @@ package com.wangping.MyStockTracker.controller;
 
 import com.wangping.MyStockTracker.dto.StockDto;
 import com.wangping.MyStockTracker.dto.StockRequestDto;
+import com.wangping.MyStockTracker.dto.StockResponseDto;
+import com.wangping.MyStockTracker.entity.Stock;
 import com.wangping.MyStockTracker.service.IStockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,9 @@ public class StockController {
     private final IStockService iStockService;
 
     @PostMapping
-    public ResponseEntity<String> addStockPrice(@RequestBody StockRequestDto stockRequestDto){
-        iStockService.saveStockPrice(stockRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Saved stock price successfully");
+    public ResponseEntity<StockResponseDto> addStock(@RequestBody StockRequestDto stockRequestDto){
+        StockResponseDto savedStock = iStockService.saveStock(stockRequestDto);
+        return ResponseEntity.ok(savedStock);
     }
 
     @GetMapping

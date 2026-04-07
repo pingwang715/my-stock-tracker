@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @Setter
 @Entity
 @Table(name = "portfolios")
-public class Portfolio {
+public class Portfolio extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,5 @@ public class Portfolio {
     @Column(name = "purchase_date", nullable = false)
     private LocalDate purchaseDate;
 
-    @Column(name = "CREATED_AT", nullable = false, updatable = false)
-    @CreatedDate
-    @CreationTimestamp
-    private Instant createdAt;
 
 }

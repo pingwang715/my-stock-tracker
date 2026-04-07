@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "stocks")
-public class Stock {
+public class Stock extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +32,6 @@ public class Stock {
 
     @Column(name = "SECTOR", length = 100)
     private String sector;
-
-    @Column(name = "CREATED_AT", nullable = false, updatable = false)
-    @CreatedDate
-    @CreationTimestamp
-    private Instant createdAt;
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StockDailyPrice> dailyPrices = new ArrayList<>();

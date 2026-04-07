@@ -2,6 +2,7 @@ package com.wangping.MyStockTracker.service.impl;
 
 import com.wangping.MyStockTracker.dto.StockDto;
 import com.wangping.MyStockTracker.dto.StockRequestDto;
+import com.wangping.MyStockTracker.dto.StockResponseDto;
 import com.wangping.MyStockTracker.entity.Stock;
 import com.wangping.MyStockTracker.entity.StockDailyPrice;
 import com.wangping.MyStockTracker.repository.StockDailyPriceRepository;
@@ -22,24 +23,19 @@ import java.util.stream.Collectors;
 public class StockServiceImpl implements IStockService {
 
     private final StockRepository stockRepository;
-    private final StockDailyPriceRepository stockDailyPriceRepository;
 
     @Override
-    public void saveStockPrice(StockRequestDto stockRequestDto) {
-
+    public StockResponseDto saveStock(StockRequestDto stockRequestDto) {
         Stock stock = stockRepository.findBySymbol(stockRequestDto.getSymbol())
                 .orElseGet(() -> {
                     Stock newStock = new Stock();
                     newStock.setSymbol(stockRequestDto.getSymbol());
                     return stockRepository.save(newStock);
                 });
-
-        StockDailyPrice stockDailyPrice = new StockDailyPrice();
-        stockDailyPrice.setStock(stock);
-        stockDailyPrice.setClosePrice(stockRequestDto.getClosePrice());
-        stockDailyPrice.setPriceDate(stockRequestDto.getPriceDate());
-        stockDailyPriceRepository.save(stockDailyPrice);
-
+        StockResponseDto stockResponseDto = new StockResponseDto();
+        stockResponseDto.setStockId(stock.getId());
+        stockResponseDto.setSymbol(stock.getSymbol());
+        return stockResponseDto;
     }
 
     @Override
