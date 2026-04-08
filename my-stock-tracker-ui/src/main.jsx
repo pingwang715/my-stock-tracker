@@ -9,7 +9,7 @@ import Home from './components/Home.jsx';
 import StockListings from './components/StockListings.jsx';
 import Portfolio, { portfoliosLoader } from './components/Portfolio.jsx';
 import News from './components/News.jsx';
-import Login from './components/Login.jsx';
+import Login, { loginAction } from './components/Login.jsx';
 import ErrorPage from './components/ErrorPage.jsx';
 import { stocksLoader } from './service/stocksLoader.js';
 import StockDetail from './components/StockDetail.jsx';
@@ -23,7 +23,7 @@ const routeDefinitions = createRoutesFromElements(
     <Route path="/stocks" element={<StockListings />} loader={stocksLoader} />
     <Route path="/portfolios" element={<Portfolio />} />
     <Route path="/news" element={<News />} />
-    <Route path="/login" element={<Login />} />
+    <Route path="/login" element={<Login />} action={loginAction} />
     <Route path="/register" element={<Register />} />
     <Route path="/stocks/:stockId" element={<StockDetail />} />
   </Route>
@@ -34,7 +34,7 @@ const appRouter = createBrowserRouter(routeDefinitions);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <StockProvider>
-      <RouterProvider router={appRouter} />
+      <RouterProvider router={appRouter} allbackElement={<div>Loading...</div>} />
     </StockProvider>
     <ToastContainer
       position="bottom-right"

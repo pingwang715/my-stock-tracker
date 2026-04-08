@@ -23,6 +23,7 @@ public class StockController {
     @PostMapping
     public ResponseEntity<StockResponseDto> addStock(@RequestBody StockRequestDto stockRequestDto){
         StockResponseDto savedStock = iStockService.saveStock(stockRequestDto);
+        System.out.println(stockRequestDto.getSymbol());
         return ResponseEntity.ok(savedStock);
     }
 

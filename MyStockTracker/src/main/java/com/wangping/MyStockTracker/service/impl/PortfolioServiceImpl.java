@@ -2,20 +2,17 @@ package com.wangping.MyStockTracker.service.impl;
 
 import com.wangping.MyStockTracker.dto.PortfolioRequestDto;
 import com.wangping.MyStockTracker.dto.PortfolioResponseDto;
-import com.wangping.MyStockTracker.dto.StockDto;
 import com.wangping.MyStockTracker.entity.Portfolio;
 import com.wangping.MyStockTracker.entity.Stock;
-import com.wangping.MyStockTracker.entity.User;
 import com.wangping.MyStockTracker.repository.PortfolioRepository;
 import com.wangping.MyStockTracker.repository.StockRepository;
-import com.wangping.MyStockTracker.repository.UserRepository;
+import com.wangping.MyStockTracker.repository.CustomerRepository;
 import com.wangping.MyStockTracker.service.IPortfolioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +22,7 @@ public class PortfolioServiceImpl implements IPortfolioService {
 
     private final PortfolioRepository portfolioRepository;
     private final StockRepository stockRepository;
-    private final UserRepository userRepository;
+
 
     @Override
     public List<PortfolioResponseDto> getPortfolios() {

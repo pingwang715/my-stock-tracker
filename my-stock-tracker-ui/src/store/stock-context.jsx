@@ -5,9 +5,9 @@ export const StockContext = createContext();
 export const useStock = () => useContext(StockContext);
 
 const ADD_TO_STOCK = "ADD_TO_STOCK";
-const REMOVE_FROM_STOCK = "REMOVE_FROM_LIKE";
+const REMOVE_FROM_STOCK = "REMOVE_FROM_STOCK";
 
-const stockRecuer = (prevStock, action) => {
+const stockReducer = (prevStock, action) => {
   const stock = action.payload;
   switch (action.type) {
     case ADD_TO_STOCK: {
@@ -34,14 +34,18 @@ export const StockProvider = ({ children }) => {
   const initialStockState = (() => {
     try {
       const storedStock = localStorage.getItem("stock");
-      return storedStock ? JSON.parse(storedStock) : [];
+      if (!storedStock || storedStock === "undefined") {
+        return [];
+      }
+      const parsed = JSON.parse(storedStock);
+      return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
       console.error("Failed to parse stock from localStorage:", error);
       return [];
     }
-  })
+  })();
 
-  const [stock, dispatch] = useReducer(stockRecuer, initialStockState);
+  const [stock, dispatch] = useReducer(stockReducer, initialStockState);
 
   useEffect(() => {
     try {

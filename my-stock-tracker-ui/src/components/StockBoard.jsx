@@ -15,15 +15,15 @@ export default function StockBoard() {
   const [error, setError] = useState("");
   const [performance, setPerformance] = useState(null);
   const [displaySymbol, setDisplaySymbol] = useState("");
-  const [stock, setStock] = useState(null);
+  const [currentStock, setCurrentStock] = useState(null);
   const { addToStock, removeFromStock, isSaved } = useStock();
 
   const toggleSave = () => {
-    if (!stock) return;
-    if (isSaved(stock.stockId)) {
-      removeFromStock(stock.stockId);
+    if (!currentStock) return;
+    if (isSaved(currentStock.stockId)) {
+      removeFromStock(currentStock.stockId);
     } else {
-      addToStock(stock);
+      addToStock(currentStock);
     }
   };
 
@@ -34,6 +34,7 @@ export default function StockBoard() {
 
     try {
       const result = await getDailyPriceWithPerformance(symbol.toUpperCase());
+      console.log(result);
       if (!result) {
         setPerformance(null);
         setDisplaySymbol("");
@@ -52,7 +53,7 @@ export default function StockBoard() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          symbol: ticker,
+          symbol: symbol.toUpperCase(),
         }),
       });
 
@@ -61,7 +62,7 @@ export default function StockBoard() {
       }
 
       const savedStock = await response.json();
-      setStock(savedStock);
+      setCurrentStock(savedStock);
     } catch (error) {
       console.error(error);
       setError("something went wrong");
@@ -108,7 +109,7 @@ export default function StockBoard() {
             >
               <FontAwesomeIcon
                 icon={
-                  stock && isSaved(stock.stockId) ? faCircleMinus : faCirclePlus
+                  currentStock && isSaved(currentStock.stockId) ? faCircleMinus : faCirclePlus
                 }
               />
             </button>

@@ -1,3 +1,5 @@
+import { symbol } from "zod";
+
 const API_KEY = import.meta.env.VITE_ALPHA_VANTAGE_KEY;
 const BASE_URL = "https://www.alphavantage.co/query?";
 
@@ -34,10 +36,12 @@ export async function getDailyPriceWithPerformance(ticker){
 
   const performance = ((latestClose / previousClose -1) * 100).toFixed(2);
 
-  return {
+  const result = {
     symbol: ticker,
     closePrice: latestClose,
     priceDate: latestDate,
     performance: parseFloat(performance),
   };
+
+  return result;
 }

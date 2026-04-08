@@ -8,7 +8,7 @@ import { useRouteLoaderData} from "react-router-dom";
 export default function Portfolio() {
   const loaderData = useRouteLoaderData("root");
   const [showForm, setShowForm] = useState(false);
-  const [portfolios, setPortfolios] = useState(loaderData);
+  const [portfolios, setPortfolios] = useState(Array.isArray(loaderData) ? loaderData : []);
   const buttonStyle =
     "flex items-center justify-center mx-auto font-primary bg-primary hover:bg-dark text-white flex items-center py-3 px-5 rounded-md";
 
@@ -49,7 +49,7 @@ export default function Portfolio() {
 export async function portfoliosLoader() {
   try {
     const response = await apiClient.get("/portfolios");
-    return response.data;
+    return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
     throw new Response(
       error.response?.data?.errorMessage ||
