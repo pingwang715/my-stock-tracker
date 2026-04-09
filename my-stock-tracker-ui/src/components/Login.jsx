@@ -1,18 +1,29 @@
-import React , { useEffect } from "react";
+import React, { useEffect } from "react";
 import PageTitle from "./PageTitle";
 import apiClient from "../service/apiClient";
 import { toast } from "react-toastify";
-import { Form, Link, useActionData, useNavigate, useNavigation } from "react-router-dom";
+import {
+  Form,
+  Link,
+  useActionData,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
+import { useAuth } from "../store/auth-context";
 
 export default function Login() {
   const actionData = useActionData();
   const navigation = useNavigation();
   const navigate = useNavigate();
   const isSubmitting = navigation.state === "submitting";
+  const { loginSuccess } = useAuth();
+  const from = sessionStorage.getItem("redirectPath") || "/home";
 
   useEffect(() => {
     if (actionData?.success) {
-      navigate("/home")
+      loginSuccess(actionData.jwtToken, actionData.user);
+      sessionStorage.removeItem("redirectPath");
+      navigate(from);
     } else if (actionData?.errors) {
       toast.error(actionData.errors.message || "Login failed.");
     }
@@ -25,74 +36,74 @@ export default function Login() {
   return (
     <div className="bg-normalbg dark:bg-darkbg">
       <div className="min-h-[852px] flex items-center justify-center font-primary dark:bg-darkbg">
-      <div className="bg-white dark:bg-gray-700 shadow-md rounded-lg max-w-md w-full px-8 py-6">
-        {/* Title */}
-        <PageTitle title="Login" />
-        {/* Form */}
-        <Form method="post" className="space-y-6">
-          {/* Email Field */}
-          <div>
-            <label htmlFor="username" className={labelStyle}>
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              name="username"
-              placeholder="Your Username"
-              autoComplete="username"
-              required
-              className={textFieldStyle}
-            />
-          </div>
+        <div className="bg-white dark:bg-gray-700 shadow-md rounded-lg max-w-md w-full px-8 py-6">
+          {/* Title */}
+          <PageTitle title="Login" />
+          {/* Form */}
+          <Form method="post" className="space-y-6">
+            {/* Email Field */}
+            <div>
+              <label htmlFor="username" className={labelStyle}>
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                name="username"
+                placeholder="Your Username"
+                autoComplete="username"
+                required
+                className={textFieldStyle}
+              />
+            </div>
 
-          {/* Password Field */}
-          <div>
-            <label htmlFor="password" className={labelStyle}>
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="Your Password"
-              autoComplete="current-password"
-              required
-              minLength={4}
-              maxLength={20}
-              className={textFieldStyle}
-            />
-          </div>
+            {/* Password Field */}
+            <div>
+              <label htmlFor="password" className={labelStyle}>
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Your Password"
+                autoComplete="current-password"
+                required
+                minLength={4}
+                maxLength={20}
+                className={textFieldStyle}
+              />
+            </div>
 
-          {/* Submit Button */}
-          <div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full px-6 py-2 text-white dark:text-black text-xl rounded-md transition duration-200 bg-primary dark:bg-light hover:bg-dark dark:hover:bg-lighter"
+            {/* Submit Button */}
+            <div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full px-6 py-2 text-white dark:text-black text-xl rounded-md transition duration-200 bg-primary dark:bg-light hover:bg-dark dark:hover:bg-lighter"
+              >
+                {isSubmitting ? "Authenticating..." : "Login"}
+              </button>
+            </div>
+          </Form>
+
+          {/* Register Link */}
+          <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="text-primary dark:text-light hover:text-dark dark:hover:text-primary transition duration-200"
             >
-             {isSubmitting? "Authenticating..." : "Login"}
-            </button>
-          </div>
-        </Form>
-
-        {/* Register Link */}
-        <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
-          Don't have an account?{" "}
-          <Link
-            to="/register"
-            className="text-primary dark:text-light hover:text-dark dark:hover:text-primary transition duration-200"
-          >
-            Register Here
-          </Link>
-        </p>
+              Register Here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
-    </div>
-  )
+  );
 }
 
-export async function loginAction({request}) {
+export async function loginAction({ request }) {
   const data = await request.formData();
 
   const loginData = {
@@ -109,12 +120,14 @@ export async function loginAction({request}) {
     if (error.response?.status === 401) {
       return {
         success: false,
-        errors: { message: "Invalid username or password"},
+        errors: { message: "Invalid username or password" },
       };
     }
     throw new Response(
-      error.response?.data?.message || error.message || "Failed to login. Please try again.",
-      { status: error.response?.status || 500}
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to login. Please try again.",
+      { status: error.response?.status || 500 },
     );
   }
 }

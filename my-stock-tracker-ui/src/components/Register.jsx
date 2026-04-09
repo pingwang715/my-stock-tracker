@@ -1,13 +1,51 @@
-import React from "react";
-import { Link, Form, useNavigation } from "react-router-dom";
+import React, { useRef, useEffect } from "react";
+import {
+  Link,
+  Form,
+  useNavigation,
+  useNavigate,
+  useActionData,
+  useSubmit,
+} from "react-router-dom";
 import apiClient from "../service/apiClient";
 import { toast } from "react-toastify";
 import PageTitle from "./PageTitle";
 
 export default function Register() {
+  const actionData = useActionData();
   const navigation = useNavigation();
+  const navigate = useNavigate();
+  const formRef = useRef(null);
+  const submit = useSubmit();
 
   const isSubmitting = navigation.state === "submitting";
+
+  useEffect(() => {
+    if (actionData?.success) {
+      navigate("/login");
+      toast.success("Registration completed successfully. Try login.");
+    }
+  }, [actionData]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(formRef.current);
+    if (!validatePasswords(formData)) {
+      return;
+    }
+    submit(formData, { method: "post" });
+  };
+
+  const validatePasswords = (formData) => {
+    const password = formData.get("password");
+    const confirmPwd = formData.get("confirmPwd");
+
+    if (password !== confirmPwd) {
+      toast.error("Passwords do not match!");
+      return false;
+    }
+    return true;
+  };
 
   const labelStyle =
     "block text-lg font-semibold text-primary dark:text-light mb-2";
@@ -19,7 +57,12 @@ export default function Register() {
       <div className="min-h-[852px] flex items-center justify-center font-primary dark:bg-darkbg">
         <div className="bg-white dark:bg-gray-700 shadow-md rounded-lg max-w-md w-full px-8 py-6">
           <PageTitle title="Register" />
-          <Form className="space-y-6">
+          <Form
+            className="space-y-6"
+            method="POST"
+            ref={formRef}
+            onSubmit={handleSubmit}
+          >
             <div>
               <label htmlFor="name" className={labelStyle}>
                 Name
@@ -29,11 +72,13 @@ export default function Register() {
                 type="text"
                 name="name"
                 placeholder="Your Name"
-                required
-                minLength={3}
-                maxLength={30}
                 className={textFieldStyle}
               />
+              {actionData?.errors?.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {actionData.errors.name}
+                </p>
+              )}
             </div>
 
             <div>
@@ -46,9 +91,13 @@ export default function Register() {
                 name="email"
                 placeholder="Your Email"
                 autoComplete="email"
-                required
                 className={textFieldStyle}
               />
+              {actionData?.errors?.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {actionData.errors.email}
+                </p>
+              )}
             </div>
 
             <div>
@@ -60,12 +109,14 @@ export default function Register() {
                 type="password"
                 name="password"
                 placeholder="Your Password"
-                required
                 autoComplete="new-password"
-                minLength={3}
-                maxLength={20}
                 className={textFieldStyle}
               />
+              {actionData?.errors?.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {actionData.errors.password}
+                </p>
+              )}
             </div>
 
             <div>
@@ -77,9 +128,6 @@ export default function Register() {
                 type="password"
                 name="confirmPwd"
                 placeholder="Confirm Your Password"
-                required
-                minLength={3}
-                maxLength={20}
                 className={textFieldStyle}
               />
             </div>
@@ -106,4 +154,25 @@ export default function Register() {
       </div>
     </div>
   );
+}
+
+export async function registerAction({ request }) {
+  const data = await request.formData();
+  const registerData = {
+    name: data.get("name"),
+    email: data.get("email"),
+    password: data.get("password"),
+  };
+  try {
+    await apiClient.post("/auth/register", registerData);
+    return { success: true };
+  } catch (error) {
+    if (error.response?.status === 400) {
+      return { success: false, errors: error.response?.data};
+    }
+    throw new Response(
+      error.response?.data?.errorMessage || error.message || "Failed to register. Please try again.",
+      { status: error.status || 500 }
+    );
+  }
 }

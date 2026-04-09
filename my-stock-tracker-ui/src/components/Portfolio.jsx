@@ -36,7 +36,7 @@ export default function Portfolio() {
               />
             ))
           ) : (
-            <p className="text-center font-primary font-bold text-lg text-primary">
+            <p className="text-center font-primary font-bold text-lg text-primary dark:text-light">
               No portfolios found
             </p>
           )}

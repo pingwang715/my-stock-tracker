@@ -1,19 +1,24 @@
 package com.wangping.MyStockTracker.security;
 
+import com.wangping.MyStockTracker.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,16 +52,11 @@ public class MyStockTrackerSecurityConfig {
                 .httpBasic(withDefaults()).build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        var user1 = User.builder().username("admin").password("$2a$12$36EsdCb9jlT4H3cs2/a1X.sxPNp12GQOeKCScaAbiM2QOgYS5LoUe").roles("ADMIN", "USER").build();
-        var user2 = User.builder().username("ping").password("$2a$12$H0tnOxG.m3dl9Rp6T5OJ2eUCZWdFNGBf3HwFppF1ox8YUu3X3IKr6").roles("USER").build();
-        return new InMemoryUserDetailsManager(user1, user2);
-    }
+
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
         var daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         var providerManager = new ProviderManager(daoAuthenticationProvider);
@@ -64,8 +64,35 @@ public class MyStockTrackerSecurityConfig {
     }
 
     @Bean
+    public UserDetailsService userDetailsService(CustomerRepository customerRepository) {
+        return username -> customerRepository.findByEmail(username)
+                .map(customer -> org.springframework.security.core.userdetails.User
+                        .withUsername(customer.getEmail())
+                        .password(customer.getPasswordHash())
+                        .roles("USER")
+                        .build())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
+
+//    @Bean
+//    public AuthenticationProvider authenticationProvider(
+//            UserDetailsService userDetailsService,
+//            PasswordEncoder passwordEncoder) {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setUserDetailsService(userDetailsService);
+//        provider.setPasswordEncoder(passwordEncoder);
+//        return provider;
+//    }
+
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CompromisedPasswordChecker compromisedPasswordChecker() {
+        return new HaveIBeenPwnedRestApiPasswordChecker();
     }
 
 

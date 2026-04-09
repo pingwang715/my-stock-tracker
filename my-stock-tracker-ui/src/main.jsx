@@ -13,19 +13,26 @@ import Login, { loginAction } from './components/Login.jsx';
 import ErrorPage from './components/ErrorPage.jsx';
 import { stocksLoader } from './service/stocksLoader.js';
 import StockDetail from './components/StockDetail.jsx';
-import Register from './components/Register.jsx';
+import Register, { registerAction } from './components/Register.jsx';
 import { StockProvider } from './store/stock-context.jsx';
+import { AuthProvider } from './store/auth-context.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Messages from './components/admin/Messages.jsx';
 
 const routeDefinitions = createRoutesFromElements(
   <Route path="/" id="root" element={<App />} loader={portfoliosLoader} errorElement={<ErrorPage />}>
     <Route index element={<Home />} />
     <Route path="/home" element={<Home />} />
     <Route path="/stocks" element={<StockListings />} loader={stocksLoader} />
-    <Route path="/portfolios" element={<Portfolio />} />
-    <Route path="/news" element={<News />} />
     <Route path="/login" element={<Login />} action={loginAction} />
-    <Route path="/register" element={<Register />} />
+    <Route path="/register" element={<Register />} action={registerAction} />
     <Route path="/stocks/:stockId" element={<StockDetail />} />
+
+    <Route element={<ProtectedRoute />}>
+      <Route path="/portfolios" element={<Portfolio />} />
+      <Route path="/news" element={<News />} />
+      <Route path="/admin/messages" element={<Messages />} />
+    </Route>
   </Route>
 );
 
@@ -33,9 +40,11 @@ const appRouter = createBrowserRouter(routeDefinitions);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <StockProvider>
-      <RouterProvider router={appRouter} allbackElement={<div>Loading...</div>} />
-    </StockProvider>
+    <AuthProvider>
+      <StockProvider>
+        <RouterProvider router={appRouter} allbackElement={<div>Loading...</div>} />
+      </StockProvider>
+    </AuthProvider>
     <ToastContainer
       position="bottom-right"
       autoClose={3000}
