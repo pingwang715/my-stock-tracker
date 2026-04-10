@@ -20,7 +20,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Messages from './components/admin/Messages.jsx';
 
 const routeDefinitions = createRoutesFromElements(
-  <Route path="/" id="root" element={<App />} loader={portfoliosLoader} errorElement={<ErrorPage />}>
+  <Route path="/" id="root" element={<App />}  errorElement={<ErrorPage />}>
     <Route index element={<Home />} />
     <Route path="/home" element={<Home />} />
     <Route path="/stocks" element={<StockListings />} loader={stocksLoader} />
@@ -29,7 +29,7 @@ const routeDefinitions = createRoutesFromElements(
     <Route path="/stocks/:stockId" element={<StockDetail />} />
 
     <Route element={<ProtectedRoute />}>
-      <Route path="/portfolios" element={<Portfolio />} />
+      <Route path="/portfolios" element={<Portfolio />} loader={portfoliosLoader}/>
       <Route path="/news" element={<News />} />
       <Route path="/admin/messages" element={<Messages />} />
     </Route>

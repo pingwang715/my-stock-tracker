@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Getter
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 public class PortfolioResponseDto {
     private Long portfolioId;
     private String symbol;
-    private BigDecimal shares;
+    private Integer shares;
     private BigDecimal purchasePrice;
     private LocalDate purchaseDate;
 }

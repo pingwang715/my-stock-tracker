@@ -13,6 +13,7 @@ public class PortfolioRequestDto {
 
     @NotBlank(message = "Symbol cannot be empty")
     @Size(min = 3, max = 20, message = "Symbol must be between 3 and 20 characters")
+    @Pattern(regexp = "^[A-Z]{1,10}$", message = "Symbol must be uppercase letters only")
     private String symbol;
 
     @NotNull(message = "Shares cannot be empty")
@@ -21,8 +22,8 @@ public class PortfolioRequestDto {
     private Integer shares;
 
     @NotNull(message = "Purchase price cannot be empty")
-    @DecimalMin(value = "1", message = "Shares must be at least 1")
-    @DecimalMax(value = "1000", message = "Shares must be at most 1000")
+    @DecimalMin(value = "1", message = "Purchase price must be at least 1")
+    @DecimalMax(value = "10000", message = "Purchase price must be at most 1000")
     @Digits(integer = 4, fraction = 4)
     private BigDecimal purchasePrice;
 

@@ -1,22 +1,22 @@
 package com.wangping.MyStockTracker.security;
 
-import com.wangping.MyStockTracker.repository.CustomerRepository;
+import com.wangping.MyStockTracker.entity.Customer;
+import com.wangping.MyStockTracker.filter.JWTTokenValidatorFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -27,6 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -48,31 +49,38 @@ public class MyStockTrackerSecurityConfig {
                             requests.anyRequest().authenticated();
                         }
                 )
+                .addFilterBefore(new JWTTokenValidatorFilter(publicPaths), BasicAuthenticationFilter.class)
                 .formLogin(withDefaults())
                 .httpBasic(withDefaults()).build();
     }
 
-
-
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
-        var daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        var providerManager = new ProviderManager(daoAuthenticationProvider);
-        return providerManager;
+    public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) throws AuthenticationException {
+        var provideManager = new ProviderManager(authenticationProvider);
+        return provideManager;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(CustomerRepository customerRepository) {
-        return username -> customerRepository.findByEmail(username)
-                .map(customer -> org.springframework.security.core.userdetails.User
-                        .withUsername(customer.getEmail())
-                        .password(customer.getPasswordHash())
-                        .roles("USER")
-                        .build())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+//            PasswordEncoder passwordEncoder) {
+//        var daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+//        var providerManager = new ProviderManager(daoAuthenticationProvider);
+//        return providerManager;
+//    }
+
+
+
+//    @Bean
+//    public UserDetailsService userDetailsService(CustomerRepository customerRepository) {
+//        return username -> customerRepository.findByEmail(username)
+//                .map(customer -> org.springframework.security.core.userdetails.User
+//                        .withUsername(customer.getEmail())
+//                        .password(customer.getPasswordHash())
+//                        .roles("USER")
+//                        .build())
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+//    }
 
 //    @Bean
 //    public AuthenticationProvider authenticationProvider(
@@ -109,4 +117,5 @@ public class MyStockTrackerSecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 }

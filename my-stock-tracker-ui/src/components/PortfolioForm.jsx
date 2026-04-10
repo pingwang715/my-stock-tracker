@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { portfolioSchema } from "../schema/portfolioSchema";
 
-export default function PortfolioForm({ isOpen, onClose }) {
+export default function PortfolioForm({ isOpen, onClose, onSuccess }) {
   const {
     register,
     handleSubmit,
@@ -23,6 +23,7 @@ export default function PortfolioForm({ isOpen, onClose }) {
   });
 
   const [date, setDate] = useState(new Date());
+  const [portfolios, setPortfolios] = useState([]);
 
   function onCalendarChange(selectedDate) {
     setDate(selectedDate);
@@ -69,6 +70,7 @@ export default function PortfolioForm({ isOpen, onClose }) {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="bg-white dark:bg-darkbg px-8 py-10 shadow-md rounded-md"
+            onSuccess={(newPortfolio) => {setPortfolios(prev => [...prev, newPortfolio])}}
           >
             <div>
               <label htmlFor="symbol" className={labelStyle}>

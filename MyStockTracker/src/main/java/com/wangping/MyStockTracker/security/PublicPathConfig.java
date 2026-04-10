@@ -13,7 +13,6 @@ public class PublicPathConfig {
         return List.of(
                 "/api/v1/stocks/**",
                 "/api/v1/auth/**"
-//                "/api/v1/portfolios/**"
         );
     };
 }

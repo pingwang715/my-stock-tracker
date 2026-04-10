@@ -3,10 +3,10 @@ import PageTitle from "./PageTitle";
 import PortfolioCard from "./PortfolioCard";
 import PortfolioForm from "./PortfolioForm";
 import apiClient from "../service/apiClient";
-import { useRouteLoaderData} from "react-router-dom";
+import { useLoaderData} from "react-router-dom";
 
 export default function Portfolio() {
-  const loaderData = useRouteLoaderData("root");
+  const loaderData = useLoaderData();
   const [showForm, setShowForm] = useState(false);
   const [portfolios, setPortfolios] = useState(Array.isArray(loaderData) ? loaderData : []);
   const buttonStyle =
