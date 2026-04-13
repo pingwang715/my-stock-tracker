@@ -1,4 +1,4 @@
-# 🚀 Project Name
+# 🚀 My Stock Tracker
 > A web application to track stock prices and portfolios
 
 
