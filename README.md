@@ -14,7 +14,7 @@ I built this tool to help users familiarize with the stock market and improve fi
 
 ## Key Features
 - ✅ Feature 1 — check stock price for the last closing day
-- ✅ Feature 2 — see stock trends in a graph of the stock prices in the last 100 days.
+- ✅ Feature 2 — see stock trends in a graph of the stock prices in the last 100 days
 - ✅ Feature 3 - create and delete portfolios
 - ✅ Feature 3 - read news related to the companies in portfolios
   
@@ -28,13 +28,14 @@ I built this tool to help users familiarize with the stock market and improve fi
 
 
 ## What I Learned / Challenges
-2–4 bullet points on real problems you solved.
-This shows engineering thinking — recruiters love this section.
+- Calling API from an external provider
+- Improved understanding of Spring Security, especially Authentication and Authorization
+- API testing with Swagger and Postman
 
 
 ## How to Run It Locally
 ```bash
-git clone [https://github.com/you/project](https://github.com/pingwang715/my-stock-tracker]
+git clone [https://github.com/pingwang715/my-stock-tracker]
 npm install
 npm run dev
 ```
