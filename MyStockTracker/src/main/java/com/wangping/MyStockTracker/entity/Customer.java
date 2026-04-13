@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -29,5 +32,9 @@ public class Customer extends BaseEntity {
     @NotNull
     @Column(name = "password_hash", nullable = false, length = 500)
     private String passwordHash;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Set<Role> roles = new LinkedHashSet<>();
 
 }

@@ -62,3 +62,14 @@ CREATE TABLE IF NOT EXISTS portfolios (
     );
 CREATE INDEX idx_port_user_id ON portfolios (user_id);
 CREATE INDEX idx_port_stock_id ON portfolios (stock_id);
+
+CREATE TABLE IF NOT EXISTS roles (
+    role_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
+    customer_id BIGINT NOT NULL,
+    name        VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP   DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_by VARCHAR(20) NOT NULL,
+    updated_at TIMESTAMP   DEFAULT NULL,
+    updated_by VARCHAR(20) DEFAULT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+    );

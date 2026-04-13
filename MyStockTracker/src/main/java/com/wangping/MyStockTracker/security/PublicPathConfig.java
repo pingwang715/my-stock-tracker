@@ -9,10 +9,12 @@ import java.util.List;
 public class PublicPathConfig {
 
     @Bean
-    public List<String> publicPath(){
+    public List<String> publicPaths(){
         return List.of(
                 "/api/v1/stocks/**",
-                "/api/v1/auth/**"
+                "/api/v1/auth/**",
+                "/api/v1/csrf-token",
+                "/error"
         );
-    };
+    }
 }

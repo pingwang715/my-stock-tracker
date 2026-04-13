@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie"
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -15,6 +16,7 @@ apiClient.interceptors.request.use(
     if (jwtToken) {
       config.headers.Authorization = `Bearer ${jwtToken}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)

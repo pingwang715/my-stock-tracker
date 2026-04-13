@@ -3,17 +3,18 @@ import { getPortfolioSymbols } from "../service/newsService";
 import { getNews } from "../service/alphaVantageNewsService";
 import NewsCard from "./NewsCard";
 import PageTitle from "./PageTitle";
-import { useRouteLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 
 export default function News() {
 
-  const portfolioData = useRouteLoaderData("root");
+  const portfolioData = useLoaderData();
   const symbols = useMemo(() => getPortfolioSymbols(portfolioData), [portfolioData]);
   const [feeds, setFeeds] = useState(null);
 
   useEffect(() => {
-    if (!symbols?.length) return;
-
+    if (!symbols?.length) {
+      return;
+    }
     async function fetchNews() {
       const data = await getNews(symbols);
       setFeeds(data);
@@ -21,8 +22,8 @@ export default function News() {
     fetchNews();
   }, [symbols]);
 
-  if (!feeds) return <div className="bg-normalbg dark:bg-darkbg min-h-[852px]">
-      <h2 className="text-primary dark:text-light font-primary">Loading...</h2>
+  if (!feeds) return <div className="bg-normalbg dark:bg-darkbg min-h-[852px] flex items-center justify-center">
+      <h2 className="text-primary dark:text-light font-primary text-4xl">Loading...</h2>
     </div>
 
   return (

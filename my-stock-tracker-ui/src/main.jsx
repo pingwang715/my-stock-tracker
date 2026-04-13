@@ -29,8 +29,8 @@ const routeDefinitions = createRoutesFromElements(
     <Route path="/stocks/:stockId" element={<StockDetail />} />
 
     <Route element={<ProtectedRoute />}>
-      <Route path="/portfolios" element={<Portfolio />} loader={portfoliosLoader}/>
-      <Route path="/news" element={<News />} />
+      <Route path="/portfolios" element={<Portfolio />} loader={portfoliosLoader} />
+      <Route path="/news" element={<News />} loader={portfoliosLoader} />
       <Route path="/admin/messages" element={<Messages />} />
     </Route>
   </Route>

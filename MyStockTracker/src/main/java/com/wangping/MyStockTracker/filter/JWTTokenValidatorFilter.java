@@ -2,6 +2,7 @@ package com.wangping.MyStockTracker.filter;
 
 import com.wangping.MyStockTracker.constants.ApplicationConstants;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -13,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -49,14 +51,22 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                         Claims claims = Jwts.parser().verifyWith(secretKey)
                                 .build().parseSignedClaims(jwt).getPayload();
                         String username = String.valueOf(claims.get("email"));
+                        String roles = String.valueOf(claims.get("roles"));
                         Authentication authentication = new UsernamePasswordAuthenticationToken(username,
-                                null, Collections.emptyList());
+                                null, AuthorityUtils.commaSeparatedStringToAuthorityList(roles));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 }
 
+            } catch (ExpiredJwtException e) {
+                // Token is expired — don't set authentication, just continue the chain.
+                // Spring Security will return 401 automatically for protected endpoints.
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\": \"Token expired. Please log in again.\"}");
+                return; // ← do NOT call filterChain.doFilter()
             } catch (Exception exception) {
-                throw new BadCredentialsException("Invalid Token received!");
+                throw new BadCredentialsException("Invalid Token received!", exception);
             }
         }
         filterChain.doFilter(request, response);

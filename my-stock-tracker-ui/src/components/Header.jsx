@@ -7,14 +7,13 @@ import { toast } from "react-toastify";
 
 export default function Header() {
 
-  const { isAuthenticated, logout, user } = useAuth();
-
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") === "dark" ? "dark" : "light";
   });
 
+  const { isAuthenticated, logout, user } = useAuth();
 
-  const isAdmin = true;
+  const isAdmin = user?.roles?.includes("ROLE_ADMIN");
   const [isUserMenuOpen, setUserMenuOpen] = useState(false);
   const [isAdminMenuOpen, setAdminMenuOpen] = useState(false);
   const location = useLocation();
@@ -128,7 +127,7 @@ export default function Header() {
                     className="relative text-primary"
                   >
                     <span className={navLinkClass}>
-                      {user.name.length > 5 ? `${user.name.slice(0, 5)}...` : user.name}
+                      Welcome back, {user.name.length > 5 ? `${user.name.slice(0, 5)}...` : user.name}
                     </span>
                     <FontAwesomeIcon
                       icon={faAngleDown}
