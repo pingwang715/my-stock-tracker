@@ -3,7 +3,7 @@
 
 
 ## What Is This?
-With this app, you can check a stock's daily and 100 days performace, keep track of your portfolios, 
+With this app, you can check a stock's daily and 100 days performace, keep track of your portfolios,
 read about stock news relevant to your portfolios
 
 
@@ -16,8 +16,8 @@ I built this tool to help users familiarize with the stock market and improve fi
 - ✅ Feature 1 — check stock price for the last closing day
 - ✅ Feature 2 — see stock trends in a graph of the stock prices in the last 100 days
 - ✅ Feature 3 - create and delete portfolios
-- ✅ Feature 3 - read news related to the companies in portfolios
-  
+- ✅ Feature 4 - read news related to the companies in portfolios
+
 
 ## Tech Stack
 | Layer    | Technology       |
